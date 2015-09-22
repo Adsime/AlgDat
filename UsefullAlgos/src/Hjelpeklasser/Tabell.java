@@ -612,6 +612,61 @@ public class Tabell {
         }
     }
 
+    public static void skriv(Object[] a, int fra, int til) {
+
+        if(til >= a.length || fra < 0 || a == null) {
+            throw new IllegalArgumentException("Argumentene er ugyldige!");
+        }
+
+        Object[] b = new Object[til - fra + 1];
+        for(int i = fra, j = 0; i <= til; i++) {
+            b[j++] = a[i];
+        }
+        System.out.print(Arrays.toString(b));
+    }
+
+    public static void skriv(Object[] a) {
+        skriv(a, 0, a.length - 1);
+    }
+
+    public static void skrivln(Object[] a, int fra, int til) {
+
+        if(til >= a.length || fra < 0 || a == null) {
+            throw new IllegalArgumentException("Argumentene er ugyldige!");
+        }
+
+        Object[] b = new Object[til - fra + 1];
+        for(int i = fra, j = 0; i <= til; i++) {
+            b[j++] = a[i];
+        }
+        System.out.println(Arrays.toString(b));
+    }
+
+    public static void skrivln(Object[] a) {
+        skrivln(a, 0, a.length - 1);
+    }
+
+    public static void bytt(Object[] a, int i, int j) {
+        Object o = a[i];
+        a[i] = a[j];
+        a[j] = o;
+    }
+
+    public static Integer[] randPermInteger(int n)
+    {
+        Integer[] a = new Integer[n];              // en Integer-tabell
+        for (int i = 0; i < n; i++) a[i] = i + 1;  // tallene fra 1 til n
+
+        Random r = new Random();   // hentes fra  java.util
+
+        for (int k = n - 1; k > 0; k--)
+        {
+            int i = r.nextInt(k+1);  // tilfeldig tall fra [0,k]
+            bytt(a,k,i);             // bytter om
+        }
+        return a;  // tabellen med permutasjonen returneres
+    } 
+
 
 
 }
