@@ -61,7 +61,7 @@ public class Tabell {
             throw new ArrayIndexOutOfBoundsException
                     ("til(" + til + ") > tablengde(" + tablengde + ")");
 
-        if (fra > til)                                // fra er større enn til
+        if (fra > til)                                // fra er stï¿½rre enn til
             throw new IllegalArgumentException
                     ("fra(" + fra + ") > til(" + til + ") - illegalt intervall!");
     }
@@ -248,32 +248,32 @@ public class Tabell {
 
     public static int[] nestMaks(int[] a) {
         int n = a.length;     // tabellens lengde
-        if (n < 2) throw      // må ha minst to verdier
+        if (n < 2) throw      // mï¿½ ha minst to verdier
                 new java.util.NoSuchElementException("a.length(" + n + ") < 2!");
 
-        int m = 0;      // m er posisjonen til største verdi
-        int nm = 1;     // nm er posisjonen til nest største verdi
+        int m = 0;      // m er posisjonen til stï¿½rste verdi
+        int nm = 1;     // nm er posisjonen til nest stï¿½rste verdi
 
-        // bytter om m og nm hvis a[1] er større enn a[0]
+        // bytter om m og nm hvis a[1] er stï¿½rre enn a[0]
         if (a[1] > a[0]) {
             m = 1; nm = 0;
         }
 
-        int maksverdi = a[m];                // største verdi
-        int nestmaksverdi = a[nm];           // nest største verdi
+        int maksverdi = a[m];                // stï¿½rste verdi
+        int nestmaksverdi = a[nm];           // nest stï¿½rste verdi
 
         for (int i = 2; i < n; i++) {
             if (a[i] > nestmaksverdi) {
                 if (a[i] > maksverdi) {
                     nm = m;
-                    nestmaksverdi = maksverdi;     // ny nest størst
+                    nestmaksverdi = maksverdi;     // ny nest stï¿½rst
 
                     m = i;
-                    maksverdi = a[m];              // ny størst
+                    maksverdi = a[m];              // ny stï¿½rst
                 }
                 else {
                     nm = i;
-                    nestmaksverdi = a[nm];         // ny nest størst
+                    nestmaksverdi = a[nm];         // ny nest stï¿½rst
                 }
             }
         } // for
@@ -312,19 +312,158 @@ public class Tabell {
         } return new int[] {m, nm};
     }
 
-    // Parter
+    // PARTER
 
     public static int parter(int[] a, int v, int h, int skilleverdi)
     {
         while (v <= h && a[v] < skilleverdi) v++;     // h er stoppverdi for v
         while (v <= h && a[h] >= skilleverdi) h--;    // v er stoppverdi for h
 
-        while (true)                                  // stopper når v >= h
+        while (true)                                  // stopper nÃ¥r v >= h
         {
             if (v < h) Tabell.bytt(a,v++,h--);          // bytter om a[v] og a[h]
             else  return v;                             // partisjoneringen er ferdig
-            while (a[v] < skilleverdi) v++;             // flytter v mot høyre
+            while (a[v] < skilleverdi) v++;             // flytter v mot hÃ¸yre
             while (a[h] >= skilleverdi) h--;            // flytter h mot venstre
         }
     }
+
+    public static int sParter(int[] a, int v, int h, int indeks)
+    {
+        Tabell.bytt(a, indeks, h);   // skilleverdi a[indeks] flyttes bakerst
+        int k = Tabell.parter(a, v, h - 1, a[h]);  // partisjonerer a[v:h âˆ’ 1]
+        Tabell.bytt(a, k, h);       // bytter for Ã¥ fÃ¥ skilleverdien pÃ¥ rett plass
+        return k;                   // returnerer posisjonen til skilleverdien
+    }
+
+    // END PARTER
+
+    // FLETTESORTERING
+
+    public static void flettesortering(int[] a)
+    {
+        int[] b = Arrays.copyOf(a, a.length/2);   // en hjelpetabell for flettingen
+        flettesortering(a,b,0,a.length);          // kaller metoden over
+    }
+
+    private static void flettesortering(int[] a, int[] b, int fra, int til)
+    {
+        if (til - fra <= 1) return;   // a[fra:til> har maks ett element
+        int m = (fra + til)/2;        // midt mellom fra og til
+
+        flettesortering(a,b,fra,m);   // sorterer a[fra:m>
+        flettesortering(a,b,m,til);   // sorterer a[m:til>
+
+        if (a[m-1] > a[m]) flett(a,b,fra,m,til);  // fletter a[fra:m> og a[m:til>
+    }
+
+    private static void flett(int[] a, int[] b, int fra, int m, int til)
+    {
+        int n = m - fra;                // antall elementer i a[fra:m>
+        System.arraycopy(a, fra, b, 0, n);  // kopierer a[fra:m> over i b[0:n>
+
+        int i = 0, j = m, k = fra;      // lÃ¸kkeST0r og indekser
+
+        while (i < n && j < til)        // fletter b[0:n> og a[m:til> og
+        {                               // legger resultatet i a[fra:til>
+            a[k++] = b[i] <= a[j] ? b[i++] : a[j++];
+        }
+
+        while (i < n) a[k++] = b[i++];  // tar med resten av b[0:n>
+    }
+
+    // END FLETTESORTERING
+
+    //KVIKKSORTERING
+
+    private static void kvikksortering1(int[] a, int v, int h)  // en privat metode
+    {
+        if (v >= h) return;  // a[v:h] er tomt eller har maks ett element
+        int k = Tabell.sParter(a, v, h, (v + h)/2);  // bruker midtverdien
+        kvikksortering1(a, v, k - 1);     // sorterer intervallet a[v:k-1]
+        kvikksortering1(a, k + 1, h);     // sorterer intervallet a[k+1:h]
+    }
+
+    public static void kvikksortering(int[] a, int fra, int til) // fra/til i sortering
+    {
+        Tabell.fratilKontroll(a.length, fra, til);  // sjekker nÃ¥r metoden er offentlig
+        kvikksortering1(a, fra, til - 1);  // v = fra, h = til - 1
+    }
+
+    public static void kvikksortering(int[] a)   // sorterer hele tabellen
+    {
+        kvikksortering1(a, 0, a.length - 1);
+    }
+
+    //END KVIKKSORTERING
+
+    // INNSETTINGSSORTERING
+
+    public static void innsettingssortering(int[] a)
+    {
+        for (int i = 1, j = 0; i < a.length; j = i++)  // starter med i = 1
+        {
+            int verdi = a[i];        // flytter a[i] til en hjelpevariabel
+
+            while (verdi < a[j])     // sammenligner
+            {
+                a[j + 1] = a[j];       // forskyver mot hÃ¸yre
+                if (j-- == 0) break;   // venstre ende av tabellen
+            }
+
+            a[j + 1] = verdi;        // verdien inn pÃ¥ rett sortert plass
+        }
+    }
+
+    // END INSETTINGSSORTERING.
+
+    // FLETTING
+
+    public static int[] enkelFletting(int[] a, int[] b)
+    {
+        int[] c = new int[a.length + b.length];  // en tabell av rett stÃ¸rrelse
+        int k = Math.min(a.length, b.length);    // lengden pÃ¥ den korteste
+
+        for (int i = 0; i < k; i++)
+        {
+            c[2*i] = a[i];        // fÃ¸rst en verdi fra a
+            c[2*i + 1] = b[i];    // sÃ¥ en verdi fra b
+        }
+        // vi mÃ¥ ta med resten
+
+        System.arraycopy(a, k, c, 2*k, a.length-k);
+        System.arraycopy(b, k , c, 2*k, b.length-k);
+
+        System.out.println(Arrays.toString(c));
+        return c;
+    }
+
+    public static String enkelFletting(String a, String b)
+    {
+        StringBuilder sb = new StringBuilder();  // en tabell av rett stÃ¸rrelse
+        int k = Math.min(a.length(), b.length());    // lengden pÃ¥ den korteste
+
+        for (int i = 0; i < k; i++)
+        {
+            sb.append(a.charAt(i));        // fÃ¸rst en verdi fra a
+            sb.append(b.charAt(i));    // sÃ¥ en verdi fra b
+        }
+
+        sb.append(a.substring(k));
+        sb.append(b.substring(k));
+        // vi mÃ¥ ta med resten
+
+
+
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+
+    public static int differens(int[] a, int m, int[] b, int n, int[] c) {
+        
+    }
+
+    // END FLETTING
+
 }
+

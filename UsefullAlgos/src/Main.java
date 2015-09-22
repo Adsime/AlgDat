@@ -1,4 +1,6 @@
 import Hjelpeklasser.Tabell;
+import javafx.scene.control.Tab;
+import week1.SimpleAlgorithms;
 
 import java.util.Arrays;
 
@@ -9,10 +11,22 @@ public class Main {
 
     public static void main(String[] args) {
 
+        int[] a = Tabell.randPerm(10000000);
+        int[] b = Arrays.copyOf(a, a.length);
 
-        int[] a = {13,2,8,10,16,9,15,4,18,14,12,11,7,5,3,6,17,1,20,19};
-        Tabell.parter(a,0,a.length-1,11);    // bruker 11 som skilleverdi
-        System.out.println(Arrays.toString(a));
+        long tid = System.currentTimeMillis();
+        Tabell.flettesortering(b);
+        System.out.println(System.currentTimeMillis() - tid);
+
+        b = Arrays.copyOf(a, a.length);
+        tid = System.currentTimeMillis();
+        Tabell.kvikksortering(b);
+        System.out.println(System.currentTimeMillis() - tid);
+
+        b = Arrays.copyOf(a, a.length);
+        tid = System.currentTimeMillis();
+        Arrays.sort(b);
+        System.out.println(System.currentTimeMillis() - tid);
     }
 
 }
