@@ -187,6 +187,63 @@ public class Tabell {
         return m;
     }
 
+    public static int maks(double[] a)     // legges i class Tabell
+    {
+        int m = 0;                           // indeks til største verdi
+        double maksverdi = a[0];             // største verdi
+
+        for (int i = 1; i < a.length; i++) if (a[i] > maksverdi)
+        {
+            maksverdi = a[i];     // største verdi oppdateres
+            m = i;                // indeks til største verdi oppdaters
+        }
+        return m;     // returnerer posisjonen til største verdi
+    }
+
+    public static int maks(String[] a)    // legges i class Tabell
+    {
+        int m = 0;                          // indeks til største verdi
+        String maksverdi = a[0];            // største verdi
+
+        for (int i = 1; i < a.length; i++) if (a[i].compareTo(maksverdi) > 0)
+        {
+            maksverdi = a[i];  // største verdi oppdateres
+            m = i;             // indeks til største verdi oppdaters
+        }
+        return m;  // returnerer posisjonen til største verdi
+    }
+
+    public static int maks(char[] a) {
+
+        int m = 0;
+        char maksverdi = a[0];
+
+        for(int i = 1; i < a.length; i++) {
+            if(a[i] > maksverdi) {
+                maksverdi = a[i];
+                m = i;
+            }
+        }
+        return m;
+    }
+
+    public static int maks(Integer[] a) {
+        int m = 0;
+        Integer maksverdi = a[m];
+
+        for(int i = 1; i < a.length; i++) {
+            if (a[i].compareTo(maksverdi) > 0) {
+                maksverdi = a[i];
+                m = i;
+            }
+        }
+        return m;
+    }
+
+    public static int compareTo(Integer a, Integer b) {
+        return (a == b) ? 0 : (a > b) ? 1 : -1;
+    }
+
     public static int[] snu(int[] a, int v, int h) {
 
         vhKontroll(a.length, v, h);
@@ -419,8 +476,7 @@ public class Tabell {
 
     // FLETTING
 
-    public static int[] enkelFletting(int[] a, int[] b)
-    {
+    public static int[] enkelFletting(int[] a, int[] b) {
         int[] c = new int[a.length + b.length];  // en tabell av rett stÃ¸rrelse
         int k = Math.min(a.length, b.length);    // lengden pÃ¥ den korteste
 
@@ -460,10 +516,105 @@ public class Tabell {
     }
 
     public static int differens(int[] a, int m, int[] b, int n, int[] c) {
-        
+
+        if(a.length < m || m < 0) {
+            throw new IllegalArgumentException("a[0:m] er ulovlig");
+        } if(b.length < n || n < 0) {
+            throw new IllegalArgumentException("b[0:n] er ulovlig");
+        }
+
+        int j = 0, i = 0, k = 0;
+
+        while(j < m && i < n) {
+            if(a[j] < b[i]) {
+                c[k++] = a[j++];
+            } else if(a[j] == b[i]) {
+                i++; j++;
+            } else {
+                i++;
+            }
+        }
+        while(j < m) {
+            c[k++] = a[j];
+        }
+        return k;
+    }
+
+    public static int differens(int[] a, int[] b, int[] c) {
+        return differens(a, a.length, b, b.length, c);
     }
 
     // END FLETTING
 
+    public static boolean inklusjon(int[] a, int m, int[] b, int n) {
+
+        if(m < 0 || a.length < m || n < 0 || b.length < 0) {
+            throw new IllegalArgumentException("Ulovlig input");
+        }
+
+        int j = 0, i = 0;
+
+        while(j < m && i < n) {
+            if(a[j] < b[i]) {
+                i++;
+            } else if(b[i] == a[j]) {
+                i++; j++;
+            } else {
+                return false;
+            }
+        }
+        return j == m;
+    }
+
+    public static boolean inklusjon(int[] a, int[] b) {
+        return inklusjon(a, a.length, b, b.length);
+    }
+
+    public static int xunion(int[] a, int m, int[] b, int n, int[] c) {
+
+
+        int i = 0; int j = 0; int k = 0;
+
+        while(i < m && j < n) {
+            if(a[i] < b[j]) {
+                c[k++] = a[i++];
+            } else if(a[i] > b[j]) {
+                c[k++] = b[j++];
+            } else if(a[i] == b[j]) {
+                i++; j++;
+            }
+        }
+
+        while(i < m) {
+            c[k++] = a[i++];
+        } while(j < n) {
+            c[k++] = b[j++];
+        }
+
+        return k;
+    }
+
+    public static int xunion(int[] a, int[] b, int[] c) {
+        return xunion(a, a.length, b, b.length, c);
+    }
+
+    public static <T extends Comparable<? super T>> void innsettingssortering(T[] a)
+    {
+        for (int i = 1, j = 0; i < a.length; j = i++)  // starter med i = 1
+        {
+            T verdi = a[i];          // flytter a[i] til en hjelpevariabel
+            while (verdi.compareTo(a[j]) < 0)  // sammenligner
+            {
+                a[j + 1] = a[j];       // forskyver mot høyre
+                if (j-- == 0) break;   // venstre ende av tabellen
+            }
+            a[j + 1] = verdi;        // verdien inn på rett sortert plass
+        }
+    }
+
+
+
 }
+
+
 

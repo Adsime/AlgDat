@@ -1,6 +1,4 @@
 import Hjelpeklasser.Tabell;
-import javafx.scene.control.Tab;
-import week1.SimpleAlgorithms;
 
 import java.util.Arrays;
 
@@ -9,24 +7,15 @@ import java.util.Arrays;
  */
 public class Main {
 
-    public static void main(String[] args) {
 
-        int[] a = Tabell.randPerm(10000000);
-        int[] b = Arrays.copyOf(a, a.length);
+    public static void main(String... args){
 
-        long tid = System.currentTimeMillis();
-        Tabell.flettesortering(b);
-        System.out.println(System.currentTimeMillis() - tid);
+        String[] s = {"Per","Kari","Ole","Anne","Ali","Eva"};
+        Tabell.innsettingssortering(s);
+        System.out.println(Arrays.toString(s));
 
-        b = Arrays.copyOf(a, a.length);
-        tid = System.currentTimeMillis();
-        Tabell.kvikksortering(b);
-        System.out.println(System.currentTimeMillis() - tid);
 
-        b = Arrays.copyOf(a, a.length);
-        tid = System.currentTimeMillis();
-        Arrays.sort(b);
-        System.out.println(System.currentTimeMillis() - tid);
     }
+
 
 }
