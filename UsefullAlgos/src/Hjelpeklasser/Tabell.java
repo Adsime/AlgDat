@@ -1,5 +1,6 @@
 package Hjelpeklasser;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -487,8 +488,8 @@ public class Tabell {
         }
         // vi må ta med resten
 
-        System.arraycopy(a, k, c, 2*k, a.length-k);
-        System.arraycopy(b, k , c, 2*k, b.length-k);
+        System.arraycopy(a, k, c, 2 * k, a.length - k);
+        System.arraycopy(b, k, c, 2 * k, b.length - k);
 
         System.out.println(Arrays.toString(c));
         return c;
@@ -665,7 +666,17 @@ public class Tabell {
             bytt(a,k,i);             // bytter om
         }
         return a;  // tabellen med permutasjonen returneres
-    } 
+    }
+
+    public static void doubleCopySort(double[] a) {
+        Double[] b = new Double[a.length];
+        for(int i = 0; i < a.length; i++) {
+            b[i] = a[i];
+        }
+        innsettingssortering(b);
+        System.out.println(Arrays.toString(b));
+        System.out.println(Arrays.toString(a));
+    }
 
 
 
