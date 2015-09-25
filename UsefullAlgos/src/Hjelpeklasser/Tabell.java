@@ -136,6 +136,20 @@ public class Tabell {
         }
     }
 
+    public static <T extends Comparable<? super T>> int maks(T[] a)
+    {
+        int m = 0;                     // indeks til største verdi
+        T maksverdi = a[0];            // største verdi
+
+        for (int i = 1; i < a.length; i++) if (a[i].compareTo(maksverdi) > 0)
+        {
+            maksverdi = a[i];  // største verdi oppdateres
+            m = i;             // indeks til største verdi oppdaters
+        }
+        return m;  // returnerer posisjonen til største verdi
+
+    }
+
     public static int min(int[] a) {
 
         if(a.length < 1) {
