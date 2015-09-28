@@ -1,11 +1,10 @@
 import Arbeidsklasser.Heltall;
+import Arbeidsklasser.Komparator;
 import Arbeidsklasser.Person;
+import Arbeidsklasser.Student;
 import Hjelpeklasser.Tabell;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -16,28 +15,26 @@ public class Main {
 
     public static void main(String... args) {
 
-
-        Person[] p = new Person[5];                   // en persontabell
-
-        p[0] = new Person("Kari","Svendsen");         // Kari Svendsen
-        p[1] = new Person("Boris","Zukanovic");       // Boris Zukanovic
-        p[2] = new Person("Ali","Kahn");              // Ali Kahn
-        p[3] = new Person("Azra","Zukanovic");        // Azra Zukanovic
-        p[4] = new Person("Kari","Pettersen");        // Kari Pettersen
-
-
-        int m = Tabell.maks(p);                       // posisjonen til den største
-        System.out.println(p[m] + " er størst");      // skriver ut den største
-
-        Arrays.sort(p);               // generisk sortering
-        System.out.println(Arrays.toString(p));
+        Student[] s = new Student[6];                       // en studenttabell
+        s[0] = new Student("Kari","Svendsen","2AA");        // Kari Svendsen
+        s[1] = new Student("Boris","Zukanovic","2IA");      // Boris Zukanovic
+        s[2] = new Student("Tiss", "Tass", "2CA");
+        s[3] = new Student("Ali","Kahn","2IA");             // Ali Kahn
+        s[4] = new Student("Azra","Zukanovic","2IA");       // Azra Zukanovic
+        s[5] = new Student("Kari","Pettersen","2AA");       // Kari Pettersen
 
 
-        Stream s = Arrays.stream(p);
-        Optional<Person> resultat = s.max(Comparator.naturalOrder());
-        resultat.ifPresent(System.out::println);
+        Komparator<Student> c = (s1,s2) -> {
+            String t1 = s1.klasse(), t2 = s2.klasse();
+            int k = t1.charAt(0) - t2.charAt(0);
+            if(k != 0) return k;
+            k = t1.charAt(1) - t2.charAt(1);
+            if(k != 0) return k;
+            return t1.charAt(2) - t2.charAt(2);
+        };
 
-        Arrays.stream(p).max(Comparator.naturalOrder()).ifPresent(System.out::println);
+        Tabell.innsettingssortering(s, c);
+        System.out.println(Arrays.toString(s));
 
     }
 

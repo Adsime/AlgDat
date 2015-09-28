@@ -1,5 +1,7 @@
 package Hjelpeklasser;
 
+import Arbeidsklasser.Komparator;
+
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -613,7 +615,7 @@ public class Tabell {
         return xunion(a, a.length, b, b.length, c);
     }
 
-    public static <T extends Comparable<? super T>> void innsettingssortering(T[] a)
+    public static <T extends Comparable<T>> void innsettingssortering(T[] a)
     {
         for (int i = 1, j = 0; i < a.length; j = i++)  // starter med i = 1
         {
@@ -623,6 +625,22 @@ public class Tabell {
                 a[j + 1] = a[j];       // forskyver mot høyre
                 if (j-- == 0) break;   // venstre ende av tabellen
             }
+            a[j + 1] = verdi;        // verdien inn på rett sortert plass
+        }
+    }
+
+    public static <T> void innsettingssortering(T[] a, Komparator<? super T> c)
+    {
+        for (int i = 1, j = 0; i < a.length; j = i++)  // starter med i = 1
+        {
+            T verdi = a[i];          // flytter a[i] til en hjelpevariabel
+
+            while (c.compare(verdi, a[j]) < 0)  // sammenligner
+            {
+                a[j + 1] = a[j];       // forskyver mot høyre
+                if (j-- == 0) break;   // venstre ende av tabellen
+            }
+
             a[j + 1] = verdi;        // verdien inn på rett sortert plass
         }
     }
@@ -692,7 +710,38 @@ public class Tabell {
         System.out.println(Arrays.toString(a));
     }
 
+    public static <T> int maks(T[] a, Komparator<? super T> c) {
 
+        int k = 0;
+        T max = a[k];
+
+        for(int i = 1; i < a.length; i++) {
+
+            if(c.compare(a[i], max) > 0) {
+                max = a[i];
+                k = i;
+            }
+
+        }
+        return k;
+
+    }
+
+    /*public static <T> void innsettingssortering(T[] a, Komparator<? super T> c)
+    {
+        for (int i = 1, j = 0; i < a.length; j = i++)  // starter med i = 1
+        {
+            T verdi = a[i];          // flytter a[i] til en hjelpevariabel
+
+            while (c.compare(verdi, a[j]) < 0)  // sammenligner
+            {
+                a[j + 1] = a[j];       // forskyver mot høyre
+                if (j-- == 0) break;   // venstre ende av tabellen
+            }
+
+            a[j + 1] = verdi;        // verdien inn på rett sortert plass
+        }
+    }*/
 
 }
 
