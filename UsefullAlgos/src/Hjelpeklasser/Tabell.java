@@ -1,8 +1,5 @@
 package Hjelpeklasser;
 
-import Arbeidsklasser.Komparator;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Random;
