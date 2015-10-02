@@ -1,6 +1,7 @@
 package Hjelpeklasser;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -642,6 +643,22 @@ public class Tabell {
         }
     }
 
+    public static <T> void innsettingssortering(T[] a, Comparator<? super T> c)
+    {
+        for (int i = 1, j = 0; i < a.length; j = i++)  // starter med i = 1
+        {
+            T verdi = a[i];          // flytter a[i] til en hjelpevariabel
+
+            while (c.compare(verdi,a[j]) < 0)  // sammenligner
+            {
+                a[j + 1] = a[j];       // forskyver mot høyre
+                if (j-- == 0) break;   // venstre ende av tabellen
+            }
+
+            a[j + 1] = verdi;        // verdien inn på rett sortert plass
+        }
+    }
+
     public static void skriv(Object[] a, int fra, int til) {
 
         if(til >= a.length || fra < 0 || a == null) {
@@ -711,7 +728,6 @@ public class Tabell {
 
         int k = 0;
         T max = a[k];
-
         for(int i = 1; i < a.length; i++) {
 
             if(c.compare(a[i], max) > 0) {
@@ -721,8 +737,127 @@ public class Tabell {
 
         }
         return k;
+    }
+
+    public static <T> int maks(T[] a, Comparator<? super T> c) {
+
+        int k = 0;
+        T max = a[k];
+        for(int i = 1; i < a.length; i++) {
+
+            if(c.compare(a[i], max) > 0) {
+                max = a[i];
+                k = i;
+            }
+
+        }
+        return k;
+    }
+
+    public static <T> int maks(T[] a, int h, int v, Comparator<? super T> c) {
+
+        int k = h;
+        T max = a[h];
+        for(int i = h+1; i < v; i++) {
+
+            if(c.compare(a[i], max) > 0) {
+                max = a[i];
+                k = i;
+            }
+
+        }
+        return k;
+    }
+
+    public static <T> void utvalgssortering(T[] t, Comparator<? super T> c) {
+
+        for(int i = t.length; i > 0; i--) {
+            bytt(t, maks(t, 0, i, c), i-1);
+        }
 
     }
+
+    public static <T> int binarySearch(T[] t, T o, Comparator<? super T> c) {
+
+        int v = 0, h = t.length -1, cmp;
+        T midtverdi;
+
+
+        while(v <= h) {
+            int m = (v + h) / 2;
+            midtverdi = t[m];
+            cmp = c.compare(o, midtverdi);
+
+            if(cmp > 0) v = m + 1;
+            else if(cmp < 0) h = m - 1;
+            else return m;
+        }
+        return -(v+1);
+    }
+
+    // GENERISK QUICKSORT
+
+    public static <T> int parter(T[] t, int v, int h, T skilleverdi, Comparator<? super T> c) {
+        while(v <= h && c.compare(t[v], skilleverdi) < 0) v++;
+        while(v <= h && c.compare(t[h], skilleverdi) >= 0) h--;
+
+        while(true) {
+            if(v < h) bytt(t, v++, h--);
+            else return v;
+            while(c.compare(t[v], skilleverdi) < 0) v++;
+            while(c.compare(t[h], skilleverdi) >= 0) h--;
+        }
+    }
+
+    public static <T> int sParter(T[] t, int v, int h, int k, Comparator<? super T> c) {
+        if(v < 0 || h >= t.length || k < v || k > h) throw new IllegalArgumentException("Ulovlige verdier");
+        bytt(t, k, h);
+        int p = parter(t, v, h - 1, t[h], c);
+        bytt(t, p, h);
+        return p;
+    }
+
+    public static <T> void kvikksortering(T[] t, int v, int h, Comparator<? super T> c) {
+        if(v >= h) return;
+
+        int p = sParter(t, v, h, (v+h)/2, c);
+        kvikksortering(t, v, p - 1, c);
+        kvikksortering(t, p+1, h, c);
+    }
+
+    public static <T> void kvikksortering(T[] t, Comparator<? super T> c) {
+        kvikksortering(t, 0, t.length-1, c);
+    }
+
+    // END KVIKKSORT
+
+    private static <T> void flett(T[] t, T[] v, int fra, int midten, int til, Comparator<? super T> c) {
+        int n = midten - fra;
+        System.arraycopy(t, fra, v, 0, n);
+
+        int i = 0, j = midten, k = fra;
+        while(i < n && j < til) {
+            t[k++] = c.compare(v[i],t[j]) <= 0 ? v[i++] : t[j++];
+        }
+        while(i < n) t[k++] = v[i++];
+    }
+
+    private static <T> void flettesortering(T[] t, T[] v, int fra, int til, Comparator<? super T> c) {
+        if(til - fra <= 1) return;
+        int midten = (fra + til)/2;
+        flettesortering(t,v,fra,midten, c);
+        flettesortering(t,v,midten,til, c);
+        flett(t, v, fra, midten, til, c);
+    }
+
+    public static <T> void flettesortering(T[] t, Comparator<? super T> c) {
+        T[] v = Arrays.copyOf(t, t.length/2);
+        flettesortering(t, v, 0, t.length, c);
+    }
+
+    // Oppgaver i rekusjon
+
+    
 
     /*public static <T> void innsettingssortering(T[] a, Komparator<? super T> c)
     {
