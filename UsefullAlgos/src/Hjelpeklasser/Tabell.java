@@ -857,7 +857,7 @@ public class Tabell {
 
     // Oppgaver i rekusjon
 
-    
+
 
     /*public static <T> void innsettingssortering(T[] a, Komparator<? super T> c)
     {
